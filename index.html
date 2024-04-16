@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Customer Details Portal</title>
+  <style>
+    /* Basic CSS for layout */
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: left;
+      align-items: flex-start;
+      height: 100vh;
+      padding: 20px;
+    }
+
+    .customer-list {
+      border-right: 2px solid #ccc;
+      padding-right: 20px;
+      max-width: 500px;
+    }
+
+    .customer-card {
+      cursor: pointer;
+      padding: 10px;
+      border-bottom: 1px solid #ccc;
+    }
+
+    .customer-card.selected {
+      background-color: #f0f0f0;
+    }
+
+    .customer-details {
+      padding-left: 20px;
+      max-width: 500px;
+    }
+
+    .photo-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-gap: 20px;
+      margin-top: 20px;
+    }
+
+    .photo {
+      width: 100%;
+      height: 100px; /* Adjust as needed */
+      object-fit: cover;
+    }
+  </style>
+</head>
+<body>
+  <div class="customer-list" id="customerList">
+    <!-- Customer cards will be added here -->
+  </div>
+  <div class="customer-details" id="customerDetails">
+    <!-- Customer details will be shown here -->
+  </div>
+  
+  <script>
+    // Mock customer data for demonstration
+    const customers = [
+      { id: '1', name: 'Larissa Rogers', title: 'CEO', address: '123 Main St' },
+      { id: '2', name: 'Gabriella Yoder', title: 'Senior Associate', address: '456 Elm St' },
+      { id: '3', name: 'Mara Skinner', title: 'Loan Executive', address: '283 Main St' },
+      { id: '4', name: 'Janae Lamb', title: 'Quality Manager', address: '491 Elm St' },
+      { id: '5', name: 'Selena Stein', title: 'Design Verification', address: '182 Elm St' },
+      { id: '6', name: 'Abraham Weeks', title: 'Admission Specialist', address: '938 Main St' },
+      { id: '7', name: 'Deja Rollins', title: 'Senior Manager', address: '918 Elm St' },
+      { id: '8', name: 'Maritza Kerr ', title: 'Manager', address: '53 Main St' },
+      { id: '9', name: 'Cayden Pham', title: 'Assistant Manager', address: '738 Main St' },
+      { id: '10', name: 'Jake Townsend', title: 'Associate ', address: '732 Elm St' },
+      { id: '11', name: 'Catherine Rodriguez', title: 'Vice President', address: '212 Elm St'},
+      { id: '12', name: 'Natalie Miles', title: 'CFO', address: '465 Main St' },
+      { id: '13', name: 'Reagan Booth', title: 'Executive', address: '910 Elm St' },
+      { id: '14', name: 'Aiyana Huang', title: 'Customer Service Representative', address: '334 Main St' },
+      { id: '15', name: 'Shayna Phelps', title: 'Accountant', address: '787 Elm St' },
+      { id: '16', name: 'Ismael Shannon', title: 'CTO', address: '621 Main St' },
+      { id: '17', name: 'Averie Hays', title: 'Administrative Assistant', address: '841 Main St' }
+      
+      
+      // Add more customer details as needed
+    ];
+
+    // Function to show customer details
+    function showCustomerDetails(customerId) {
+      const customer = customers.find(c => c.id === customerId);
+      const detailsContainer = document.getElementById('customerDetails');
+      if (!customer || !detailsContainer) return;
+
+      // Generate random photo URLs (replace with actual API call)
+      const photoUrls = Array.from({ length: 9 }, () => `https://images.spot.im/v1/production/n7ktccpr4o9mvlzfajfc`);
+
+      // Update customer details HTML
+      detailsContainer.innerHTML = `
+        <h2>${customer.name}</h2>
+        <p>Title: ${customer.title}</p>
+        <p>Address: ${customer.address}</p>
+        <div class="photo-grid">
+          ${photoUrls.map(url => `<img class="photo" src="https://images.spot.im/v1/production/n7ktccpr4o9mvlzfajfc" alt="Photo">`).join('')}
+        </div>
+      `;
+    }
+
+    // Function to highlight selected customer card
+    function highlightCustomerCard(customerId) {
+      const customerCards = document.querySelectorAll('.customer-card');
+      customerCards.forEach(card => {
+        if (card.dataset.customerId === customerId) {
+          card.classList.add('selected');
+        } else {
+          card.classList.remove('selected');
+        }
+      });
+    }
+
+    // Function to fetch photos from API and update every 10 seconds
+    function fetchPhotosAndUpdate() {
+      // Simulated fetch operation
+      setTimeout(() => {
+        // Generate random photo URLs (replace with actual API call)
+        const photoUrls = Array.from({ length: 9 }, () => `https://images.spot.im/v1/production/n7ktccpr4o9mvlzfajfc`);
+        const photoElements = document.querySelectorAll('.photo');
+        photoElements.forEach((photo, index) => {
+          photo.src = photoUrls[index];
+        });
+        fetchPhotosAndUpdate(); // Recursive call for every 10 seconds
+      }, 10000);
+    }
+
+    // Populate customer list
+    const customerListContainer = document.getElementById('customerList');
+    customers.forEach(customer => {
+      const card = document.createElement('div');
+      card.className = 'customer-card';
+      card.dataset.customerId = customer.id;
+      card.textContent = `${customer.name} - ${customer.title}`;
+      card.addEventListener('click', () => {
+        showCustomerDetails(customer.id);
+        highlightCustomerCard(customer.id);
+      });
+      customerListContainer.appendChild(card);
+    });
+
+    // Start fetching photos and updating
+    fetchPhotosAndUpdate();
+  </script>
+</body>
+</html>
